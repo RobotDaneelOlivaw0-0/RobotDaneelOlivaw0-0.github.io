@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>测试文章 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="故障排查复盘：从「卡顿」到「掰直一根针」 用户的追问：为什么会坏？为什么看起来一模一样的新适配器，插上去就好了？这篇复盘把整条排查逻辑完整讲清楚——不是罗列做了什么，而是「每一步为什么这么做、怎么排除、怎么逼近真相」。   一、起点：一个模糊的症状「电脑很卡」现象：打开软件慢、打字有延迟，而且「电池充满电用一会儿就不卡了」。 这个现象很普通，但隐藏着关键线索——它不是恒定卡顿，是「某种状态下好，某">
+<meta property="og:type" content="article">
+<meta property="og:title" content="测试文章">
+<meta property="og:url" content="http://example.com/2026/09/17/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="故障排查复盘：从「卡顿」到「掰直一根针」 用户的追问：为什么会坏？为什么看起来一模一样的新适配器，插上去就好了？这篇复盘把整条排查逻辑完整讲清楚——不是罗列做了什么，而是「每一步为什么这么做、怎么排除、怎么逼近真相」。   一、起点：一个模糊的症状「电脑很卡」现象：打开软件慢、打字有延迟，而且「电池充满电用一会儿就不卡了」。 这个现象很普通，但隐藏着关键线索——它不是恒定卡顿，是「某种状态下好，某">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-17T01:32:12.000Z">
+<meta property="article:modified_time" content="2026-09-17T01:36:51.327Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-测试文章" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/17/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/" class="article-date">
+  <time class="dt-published" datetime="2026-09-17T01:32:12.000Z" itemprop="datePublished">2026-09-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      测试文章
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="故障排查复盘：从「卡顿」到「掰直一根针」"><a href="#故障排查复盘：从「卡顿」到「掰直一根针」" class="headerlink" title="故障排查复盘：从「卡顿」到「掰直一根针」"></a>故障排查复盘：从「卡顿」到「掰直一根针」</h1><blockquote>
+<p>用户的追问：为什么会坏？为什么看起来一模一样的新适配器，插上去就好了？这篇复盘把整条排查逻辑完整讲清楚——不是罗列做了什么，而是「每一步为什么这么做、怎么排除、怎么逼近真相」。</p>
+</blockquote>
+<hr>
+<h2 id="一、起点：一个模糊的症状「电脑很卡」"><a href="#一、起点：一个模糊的症状「电脑很卡」" class="headerlink" title="一、起点：一个模糊的症状「电脑很卡」"></a>一、起点：一个模糊的症状「电脑很卡」</h2><p><strong>现象</strong>：打开软件慢、打字有延迟，而且「电池充满电用一会儿就不卡了」。</p>
+<p>这个现象很普通，但<strong>隐藏着关键线索</strong>——它不是恒定卡顿，是「某种状态下好，某种状态下坏」。卡顿时机 &#x3D; 操控变量。这决定了之后的调查方向。</p>
+<hr>
+<h2 id="二、第一步动作：先排最显眼的「硬盘」（用户第一怀疑）"><a href="#二、第一步动作：先排最显眼的「硬盘」（用户第一怀疑）" class="headerlink" title="二、第一步动作：先排最显眼的「硬盘」（用户第一怀疑）"></a>二、第一步动作：先排最显眼的「硬盘」（用户第一怀疑）</h2><p>逻辑：卡顿最常见三巨头是 <strong>硬盘、内存、CPU</strong>。先做排除法里最便宜的项目。</p>
+<p><strong>做了什么</strong>：</p>
+<ul>
+<li>看一眼硬盘健康（SMART）：两块 NVMe 全部 <code>Healthy</code></li>
+<li>磁盘队列 &#x3D; 0（没有读写积压）</li>
+<li>内存 16GB 用了 81%（偏紧但不是根因）</li>
+</ul>
+<p><strong>结论</strong>：硬盘健康、无瓶颈 → <strong>排除硬盘</strong>。<br>（同时发现后台 WPS&#x2F;微信&#x2F;QQ 等占了不少 CPU，但注意：这解释不了「为什么拔电就不卡」这种条件性现象。）</p>
+<hr>
+<h2 id="三、量到真凭实据：CPU-频率锁死在-0-37GHz"><a href="#三、量到真凭实据：CPU-频率锁死在-0-37GHz" class="headerlink" title="三、量到真凭实据：CPU 频率锁死在 0.37GHz"></a>三、量到真凭实据：CPU 频率锁死在 0.37GHz</h2><p><strong>核心工具</strong>：满载 8 核压测 + 读 <code>% of Maximum Frequency</code>。<br>11800H 满睿频约 4.6GHz，100% 应该 ≈ 4.6GHz。</p>
+<p><strong>测试结果（多次复现）</strong>：</p>
+<ul>
+<li>插着电：CPU 占用 100%，<strong>频率 8%（≈0.37GHz）锁死</strong>，偶尔闪一下 90% 立刻掉回</li>
+<li>拔掉电源：<strong>84<del>96%（≈4.0</del>4.4GHz）满血</strong></li>
+</ul>
+<p><strong>这个对比是整案的第一个突破口</strong>：同一台电脑、同一种负载，只操作一个变量（插电&#x2F;拔电），性能天差地别 → <strong>问题锁定在「插电状态」本身，而不是电脑内部</strong>。</p>
+<hr>
+<h2 id="四、剥洋葱：把软件-设置层的嫌疑一个个毙掉"><a href="#四、剥洋葱：把软件-设置层的嫌疑一个个毙掉" class="headerlink" title="四、剥洋葱：把软件&#x2F;设置层的嫌疑一个个毙掉"></a>四、剥洋葱：把软件&#x2F;设置层的嫌疑一个个毙掉</h2><p>既然怀疑与「电」相关，按「最便宜的先试」顺序排：</p>
+<ol>
+<li><strong>Windows 电源方案</strong> → 已是最佳性能，CPU 限速 100%，无效</li>
+<li><strong>Omen 节能误开</strong> → 日志确认 <code>IsAutoSwitchingToEcoMode=False</code>，未误开</li>
+<li><strong>风扇&#x2F;散热</strong> → 改自动、清过灰、换硅脂，无效 → 排除散热热降频</li>
+<li><strong>XTU 超频驱动残留</strong> → 服务跑着，禁用后无效 → 排除软件抢占 MSR</li>
+<li><strong>EC 硬重置</strong> → 放电复位后依旧锁死 → 排除固件状态卡死</li>
+</ol>
+<p><strong>每一层都「无效」本身就是信息</strong>：问题不在软件、OS、Omen、固件，那就越发指向——<strong>硬件供电端</strong>。</p>
+<hr>
+<h2 id="五、关键跳板：充满电与「插电锁频」的矛盾，催生交叉验证"><a href="#五、关键跳板：充满电与「插电锁频」的矛盾，催生交叉验证" class="headerlink" title="五、关键跳板：充满电与「插电锁频」的矛盾，催生交叉验证"></a>五、关键跳板：充满电与「插电锁频」的矛盾，催生交叉验证</h2><p>用户证言「充满电用起来不卡」+ 我们实测「插电就锁死」看似矛盾，其实是同一现象：<strong>充满电拔线使用 &#x3D; 电池模式 &#x3D; 满血</strong>。理解后反而互相印证。</p>
+<p>于是做<strong>对照实验（单一变量原则）</strong>：借来 2 号适配器（型号、功率、接口完全相同——唯一变量是器件本身）。</p>
+<table>
+<thead>
+<tr>
+<th>适配器</th>
+<th>插电满载</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 号（原装）</td>
+<td>8% 锁死</td>
+</tr>
+<tr>
+<td><strong>2 号（借的）</strong></td>
+<td><strong>98~100% 满血</strong></td>
+</tr>
+</tbody></table>
+<p><strong>铁证</strong>：换适配器即恢复 → 不是电脑问题，是 1 号适配器问题。<br>（3 号第三方适配器后续也测出 100%，更加坐实了 1 号是孤例。）</p>
+<hr>
+<h2 id="六、终极答案：看起来「全新」的适配器，坏在哪儿？"><a href="#六、终极答案：看起来「全新」的适配器，坏在哪儿？" class="headerlink" title="六、终极答案：看起来「全新」的适配器，坏在哪儿？"></a>六、终极答案：看起来「全新」的适配器，坏在哪儿？</h2><p>继续追问「为什么原装却坏」。此时才去<strong>做物理检查</strong>，发现：</p>
+<blockquote>
+<p><strong>DC 插头内部中间的数据针弯了。</strong></p>
+</blockquote>
+<p>（此前只擦了外部镀层、只测了功率和频率，都没用——因为病灶在针的几何形变。）</p>
+<p><strong>原理</strong>：HP 智能适配器中间那一根针不是供电用的，是<strong>跟电脑 EC 通信的「功率握手」数据针</strong>。针一歪 → 和电脑接口的触点接触不良 → EC 收不到「我是 230W 合格适配器」的信号 → 误判为低功率&#x2F;异常电源 → <strong>触发电池保护：把 CPU 锁到最低频</strong>。</p>
+<p>这也完美解释了两个此前费解的观察：</p>
+<ul>
+<li>「外表准新却坏」——坏的是内部物理针，不是外观或电容老化</li>
+<li>「擦拭外部镀层无效」——病灶在内部弯曲，擦外面当然没用</li>
+</ul>
+<hr>
+<h2 id="七、修复与闭环验证"><a href="#七、修复与闭环验证" class="headerlink" title="七、修复与闭环验证"></a>七、修复与闭环验证</h2><p><strong>修复动作</strong>：小心把弯掉的针掰回正中。</p>
+<p><strong>验证</strong>（不是「掰完能用就行」，而是按原标准复测）：</p>
+<ul>
+<li>满载 8 核：1 号插电 <strong>95~100% 满血</strong>，连续多日稳定</li>
+<li>充电功能正常（边用边充 ≈19W，正常水平）</li>
+<li>结论：1 号原装适配器<strong>零成本修复</strong>，3 号退货决定成立</li>
+</ul>
+<p>更妙的验证一致性：拿 3 号测相同负载对比性能完全相同 → 再次确认「1 号恢复如初」。</p>
+<hr>
+<h2 id="八、方法论沉淀：这次排查为什么能走通"><a href="#八、方法论沉淀：这次排查为什么能走通" class="headerlink" title="八、方法论沉淀：这次排查为什么能走通"></a>八、方法论沉淀：这次排查为什么能走通</h2><ol>
+<li><strong>把模糊症状转成可量化实验</strong>：卡顿不可测，但「满载频率 %」可测、可复现</li>
+<li><strong>单一变量</strong>：每次都只改一个东西（插电&#x2F;拔电、换适配器、擦头、掰针），结果才有归因意义</li>
+<li><strong>先软件后硬件、先便宜后贵的排除顺序</strong>：从设置到固件到芯片到通电链路，省时省力</li>
+<li><strong>矛盾不放过</strong>：「充满电不卡」看似矛盾，拆开后反而指向关键变量</li>
+<li><strong>对照件验证</strong>：借&#x2F;买同规格适配器做隔离测试，最终把问题钉死在单个器件上</li>
+<li><strong>修复后按原标准复验</strong>：不满足于「看起来好了」，回归同一测压 → 才敢下最终结论</li>
+</ol>
+<blockquote>
+<p>一句话总结：<strong>一个看似玄学的「插电卡顿」，本质是 DC 数据针歪导致 EC 误判功率不足、锁频保护；通过量化压测 + 适配器交叉对照 + 物理检查，最终定位到一根针，掰直即愈。</strong></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/09/17/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/" data-id="cuid_4Ss5ex7c-13eiI5ShwiI" data-title="测试文章" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/09/15/CPU%E9%94%81%E9%A2%91%E8%AF%8A%E6%96%AD%E6%8A%A5%E5%91%8A_20260915/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">电脑卡顿诊断报告（锁频问题）— 最终版（已解决）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/" rel="tag">故障排查</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/" rel="tag">电脑硬件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/" style="font-size: 10px;">故障排查</a> <a href="/tags/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/" style="font-size: 10px;">电脑硬件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/17/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/">测试文章</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/15/CPU%E9%94%81%E9%A2%91%E8%AF%8A%E6%96%AD%E6%8A%A5%E5%91%8A_20260915/">电脑卡顿诊断报告（锁频问题）— 最终版（已解决）</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/31/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">我的第一篇文章</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/31/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
