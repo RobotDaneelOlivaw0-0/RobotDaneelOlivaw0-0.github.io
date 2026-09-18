@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Obsidian：Windows + iPhone 双向同步 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="用 Syncthing + Möbius Sync 实现 Windows 与 iPhone(iOS) 之间的 Obsidian 笔记双向同步。本文是本次实际验证的完整配置教程，并记录了中间踩过的坑和排查方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Obsidian：Windows + iPhone 双向同步">
+<meta property="og:url" content="http://example.com/2026/09/17/Obsidian_Windows_iPhone_Syncthing_Mobius_Sync_%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="用 Syncthing + Möbius Sync 实现 Windows 与 iPhone(iOS) 之间的 Obsidian 笔记双向同步。本文是本次实际验证的完整配置教程，并记录了中间踩过的坑和排查方法。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-17T04:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-18T18:07:01.449Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Obsidian">
+<meta property="article:tag" content="同步">
+<meta property="article:tag" content="效率工具">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Obsidian_Windows_iPhone_Syncthing_Mobius_Sync_配置总结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/17/Obsidian_Windows_iPhone_Syncthing_Mobius_Sync_%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2026-09-17T04:00:00.000Z" itemprop="datePublished">2026-09-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Obsidian：Windows + iPhone 双向同步
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Obsidian：Windows-iPhone-双向同步"><a href="#Obsidian：Windows-iPhone-双向同步" class="headerlink" title="Obsidian：Windows + iPhone 双向同步"></a>Obsidian：Windows + iPhone 双向同步</h1><blockquote>
+<p><strong>本次实际验证方案：Windows + iOS</strong></p>
+<p>目前未测试：macOS、Linux、Android。</p>
+</blockquote>
+<hr>
+<h2 id="1-采用方案"><a href="#1-采用方案" class="headerlink" title="1. 采用方案"></a>1. 采用方案</h2><p><strong>Windows：Syncthing + iPhone：Möbius Sync</strong></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Windows Obsidian</span><br><span class="line">      ↕</span><br><span class="line">   Syncthing</span><br><span class="line">      ↕</span><br><span class="line">Möbius Sync（iPhone）</span><br><span class="line">      ↕</span><br><span class="line">iPhone Obsidian</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Syncthing：Windows 端负责同步，免费。</li>
+<li>Möbius Sync：iOS 端连接 Syncthing；本次用到的外部文件夹功能为一次性购买。</li>
+<li>Obsidian：不使用 Obsidian Sync，不用 OneDrive。</li>
+<li>本方案的核心特点：<strong>一次性购买 Möbius Sync 的相关功能后，不需要像订阅型同步服务一样持续付同步费用。</strong></li>
+</ul>
+<blockquote>
+<p>注意：这里的”一次性购买”指本次使用的 Möbius Sync Pro&#x2F;外部文件夹功能；具体价格和 App Store 条款以后如有变化，以当时页面为准。</p>
+</blockquote>
+<hr>
+<h1 id="2-完整配置：一步一步操作"><a href="#2-完整配置：一步一步操作" class="headerlink" title="2. 完整配置：一步一步操作"></a>2. 完整配置：一步一步操作</h1><h2 id="第一步：Windows-安装-Syncthing"><a href="#第一步：Windows-安装-Syncthing" class="headerlink" title="第一步：Windows 安装 Syncthing"></a>第一步：Windows 安装 Syncthing</h2><ol>
+<li>在 Windows 安装 Syncthing。</li>
+<li>打开 Syncthing 管理页面。</li>
+<li>记住 Windows 设备 ID，后面要和 iPhone 配对。</li>
+</ol>
+<hr>
+<h2 id="第二步：iPhone-安装-Mobius-Sync"><a href="#第二步：iPhone-安装-Mobius-Sync" class="headerlink" title="第二步：iPhone 安装 Möbius Sync"></a>第二步：iPhone 安装 Möbius Sync</h2><ol>
+<li>App Store 安装 <strong>Möbius Sync</strong>。</li>
+<li>打开 Möbius Sync。</li>
+<li>如果需要使用 <strong>Pick External Folder（选择外部文件夹）</strong>，购买对应 Pro 功能。</li>
+<li>安装&#x2F;打开 iPhone 上的 Obsidian。</li>
+</ol>
+<hr>
+<h2 id="第三步：让两个设备互相认识"><a href="#第三步：让两个设备互相认识" class="headerlink" title="第三步：让两个设备互相认识"></a>第三步：让两个设备互相认识</h2><p>在 Möbius Sync 和 Windows Syncthing 中完成设备配对：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Windows Syncthing</span><br><span class="line">       ↕</span><br><span class="line">   iPhone Möbius Sync</span><br></pre></td></tr></table></figure>
+
+<p>双方都接受对方的设备请求。</p>
+<p>看到双方设备已经建立连接后，再进行文件夹同步配置。</p>
+<hr>
+<h2 id="第四步：确定-Windows-上真正的-Obsidian-Vault-路径"><a href="#第四步：确定-Windows-上真正的-Obsidian-Vault-路径" class="headerlink" title="第四步：确定 Windows 上真正的 Obsidian Vault 路径"></a>第四步：确定 Windows 上真正的 Obsidian Vault 路径</h2><p>先在 Windows 找到你的 Obsidian 仓库。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\Notes\Research</span><br></pre></td></tr></table></figure>
+
+<p>这里的重点不是路径长什么样，而是：</p>
+<blockquote>
+<p><strong>Syncthing 的 Folder Path 必须指向真正的 Obsidian Vault 文件夹。</strong></p>
+</blockquote>
+<p>验证方法：</p>
+<ol>
+<li>打开 Windows 文件资源管理器。</li>
+<li>进入你的 Vault 所在位置。</li>
+<li>确认里面能看到你的 <code>.md</code> 笔记、附件以及 <code>.obsidian</code> 等内容。</li>
+<li>记住这个文件夹的完整路径。</li>
+</ol>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第五步：在-iPhone-的-Mobius-Sync-中添加-Obsidian-文件夹"><a href="#第五步：在-iPhone-的-Mobius-Sync-中添加-Obsidian-文件夹" class="headerlink" title="第五步：在 iPhone 的 Möbius Sync 中添加 Obsidian 文件夹"></a>第五步：在 iPhone 的 Möbius Sync 中添加 Obsidian 文件夹</h2><p>在 Möbius Sync：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Add Folder</span><br><span class="line">↓</span><br><span class="line">Pick External Folder</span><br><span class="line">↓</span><br><span class="line">进入 iPhone 的 Obsidian 文件夹</span><br><span class="line">↓</span><br><span class="line">选择/创建用于同步的 Vault 文件夹</span><br><span class="line">↓</span><br><span class="line">保存</span><br></pre></td></tr></table></figure>
+
+<p>重点：</p>
+<p><strong>不要直接把 Windows 路径复制到 iPhone。</strong></p>
+<p>例如 Windows：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
+
+<p>这是 Windows 的路径，iPhone 不认识。</p>
+<p>iPhone 要选择的是自己的本地文件夹，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">On My iPhone</span><br><span class="line">└── Obsidian</span><br><span class="line">    └── MyVault</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第六步：把这个文件夹共享给-Windows"><a href="#第六步：把这个文件夹共享给-Windows" class="headerlink" title="第六步：把这个文件夹共享给 Windows"></a>第六步：把这个文件夹共享给 Windows</h2><p>在 Möbius Sync 中找到刚刚添加的文件夹：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">文件夹</span><br><span class="line">↓</span><br><span class="line">Edit / 编辑</span><br><span class="line">↓</span><br><span class="line">Sharing / 共享</span><br><span class="line">↓</span><br><span class="line">勾选 Windows 设备</span><br></pre></td></tr></table></figure>
+
+<p>然后等待 Windows Syncthing 出现共享请求。</p>
+<hr>
+<h2 id="第七步：Windows-接受共享"><a href="#第七步：Windows-接受共享" class="headerlink" title="第七步：Windows 接受共享"></a>第七步：Windows 接受共享</h2><p>打开 Windows Syncthing。</p>
+<p>如果看到来自 iPhone 的新文件夹共享：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Add / 添加</span><br></pre></td></tr></table></figure>
+
+<p>进入设置。</p>
+<p>重点检查：</p>
+<h3 id="Folder-ID"><a href="#Folder-ID" class="headerlink" title="Folder ID"></a>Folder ID</h3><p>两边对应即可。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wpfda-tr26p</span><br></pre></td></tr></table></figure>
+
+<h3 id="Folder-Path"><a href="#Folder-Path" class="headerlink" title="Folder Path"></a>Folder Path</h3><p>这里填写：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Windows 上真正的 Obsidian Vault 路径</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
+
+<h3 id="Folder-Type"><a href="#Folder-Type" class="headerlink" title="Folder Type"></a>Folder Type</h3><p>选择：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Send &amp; Receive</span><br><span class="line">发送和接收</span><br></pre></td></tr></table></figure>
+
+<p>这样就是双向同步。</p>
+<p>最后：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Save / 保存</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="第八步：等待第一次同步"><a href="#第八步：等待第一次同步" class="headerlink" title="第八步：等待第一次同步"></a>第八步：等待第一次同步</h2><p>正常情况下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">扫描</span><br><span class="line">↓</span><br><span class="line">同步</span><br><span class="line">↓</span><br><span class="line">Up to Date / 最新</span><br></pre></td></tr></table></figure>
+
+<p>等 Windows 和 iPhone 两边都显示正常&#x2F;最新后，再打开 Obsidian 检查笔记。</p>
+<hr>
+<h2 id="第九步：做双向测试"><a href="#第九步：做双向测试" class="headerlink" title="第九步：做双向测试"></a>第九步：做双向测试</h2><p>不要一开始就拿重要笔记测试。</p>
+<p>先新建一个测试笔记：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sync-test.md</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试-1：Windows-→-iPhone"><a href="#测试-1：Windows-→-iPhone" class="headerlink" title="测试 1：Windows → iPhone"></a>测试 1：Windows → iPhone</h3><p>Windows Obsidian：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">新建 sync-test.md</span><br><span class="line">内容：Windows test</span><br><span class="line">保存</span><br></pre></td></tr></table></figure>
+
+<p>然后打开 Möbius Sync，等待同步。</p>
+<p>再到 iPhone Obsidian 查看。</p>
+<hr>
+<h3 id="测试-2：iPhone-→-Windows"><a href="#测试-2：iPhone-→-Windows" class="headerlink" title="测试 2：iPhone → Windows"></a>测试 2：iPhone → Windows</h3><p>iPhone Obsidian：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">新建 iphone-test.md</span><br><span class="line">内容：iPhone test</span><br><span class="line">保存</span><br></pre></td></tr></table></figure>
+
+<p>等待同步。</p>
+<p>回 Windows 查看。</p>
+<p>如果两个方向都成功：</p>
+<blockquote>
+<p><strong>双向同步配置完成。</strong></p>
+</blockquote>
+<hr>
+<h1 id="3-正常工作方式"><a href="#3-正常工作方式" class="headerlink" title="3. 正常工作方式"></a>3. 正常工作方式</h1><p>之后不需要每次手动复制文件。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Windows 修改笔记</span><br><span class="line">      ↓</span><br><span class="line">Syncthing 检测变化</span><br><span class="line">      ↓</span><br><span class="line">Möbius Sync</span><br><span class="line">      ↓</span><br><span class="line">iPhone Obsidian</span><br></pre></td></tr></table></figure>
+
+<p>反过来也一样。</p>
+<p>但 iOS 有后台运行限制，所以：</p>
+<blockquote>
+<p><strong>不要把 Möbius Sync 理解成 Windows Syncthing 一样可以一直后台运行。</strong></p>
+</blockquote>
+<p>如果发现手机修改后没有马上同步，可以先打开 Möbius Sync，让它运行一会儿。</p>
+<hr>
+<h1 id="4-本次实际遇到的问题-⭐"><a href="#4-本次实际遇到的问题-⭐" class="headerlink" title="4. 本次实际遇到的问题 ⭐"></a>4. 本次实际遇到的问题 ⭐</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>两边设备看起来已经连接，但笔记不同步。</p>
+<p>Windows Syncthing 中对应文件夹显示：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">已停止</span><br><span class="line">folder path missing</span><br></pre></td></tr></table></figure>
+
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>原来 Vault 叫：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">notes</span><br></pre></td></tr></table></figure>
+
+<p>后来在 Obsidian 中改名成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sync notes</span><br></pre></td></tr></table></figure>
+
+<p>Obsidian 会同时重命名底层文件夹。官方文档也明确说明 Vault 名称与底层文件夹名称相同，因此重命名 Vault 也会重命名文件夹。</p>
+<p>所以：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">原路径：</span><br><span class="line">D:\Obsidian\notes</span><br><span class="line"></span><br><span class="line">改名后：</span><br><span class="line">D:\Obsidian\sync notes</span><br></pre></td></tr></table></figure>
+
+<p>但 Syncthing 仍然记录着旧路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\notes</span><br></pre></td></tr></table></figure>
+
+<p>于是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">找不到文件夹</span><br><span class="line">↓</span><br><span class="line">folder path missing</span><br><span class="line">↓</span><br><span class="line">文件夹停止</span><br><span class="line">↓</span><br><span class="line">无法同步</span><br></pre></td></tr></table></figure>
+
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><ol>
+<li>在 Windows 文件资源管理器确认真正的 Vault 路径。</li>
+<li>打开 Syncthing → 对应文件夹 → <strong>编辑</strong>。</li>
+<li>把 <code>Folder Path</code> 改成现在真实存在的 Vault 路径。</li>
+<li>保持 <code>Folder Type = Send &amp; Receive</code>。</li>
+<li>保存。</li>
+<li>等待重新扫描&#x2F;同步，直到显示 <strong>Up to Date &#x2F; 最新</strong>。</li>
+</ol>
+<h3 id="本次问题的排查口诀"><a href="#本次问题的排查口诀" class="headerlink" title="本次问题的排查口诀"></a>本次问题的排查口诀</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">设备连接 ≠ 文件夹一定正常</span><br><span class="line"></span><br><span class="line">不同步</span><br><span class="line">↓</span><br><span class="line">先看 Folder 状态</span><br><span class="line">↓</span><br><span class="line">如果&quot;已停止&quot;</span><br><span class="line">↓</span><br><span class="line">看 Error</span><br><span class="line">↓</span><br><span class="line">如果 folder path missing</span><br><span class="line">↓</span><br><span class="line">检查 Folder Path 是否真的存在</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="5-一个容易误判的现象"><a href="#5-一个容易误判的现象" class="headerlink" title="5. 一个容易误判的现象"></a>5. 一个容易误判的现象</h1><p>本次还有一个现象：</p>
+<p>旧路径虽然已经不存在，但把旧路径输入资源管理器后，仍可能跳到 Obsidian。</p>
+<p>不要因此判断：</p>
+<blockquote>
+<p>“旧文件夹还存在。”</p>
+</blockquote>
+<p>判断同步路径时，直接打开旧路径的上级目录，查看<strong>实际存在的文件夹</strong>。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian</span><br></pre></td></tr></table></figure>
+
+<p>里面如果实际只有：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MyVault</span><br></pre></td></tr></table></figure>
+
+<p>那么真正的路径就是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
+
+<p>以文件系统实际存在的文件夹为准。</p>
+<hr>
+<h1 id="6-以后最重要的注意事项"><a href="#6-以后最重要的注意事项" class="headerlink" title="6. 以后最重要的注意事项"></a>6. 以后最重要的注意事项</h1><h3 id="①-不要随便改-Vault-名称"><a href="#①-不要随便改-Vault-名称" class="headerlink" title="① 不要随便改 Vault 名称"></a>① 不要随便改 Vault 名称</h3><p>因为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Obsidian Vault 名称</span><br><span class="line">        ↓</span><br><span class="line">底层文件夹名称</span><br><span class="line">        ↓</span><br><span class="line">Syncthing Folder Path</span><br></pre></td></tr></table></figure>
+
+<p>改名后要检查 Syncthing 的路径。</p>
+<hr>
+<h3 id="②-不同步时先看-Folder-状态"><a href="#②-不同步时先看-Folder-状态" class="headerlink" title="② 不同步时先看 Folder 状态"></a>② 不同步时先看 Folder 状态</h3><p>重点看：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Up to Date / 最新</span><br></pre></td></tr></table></figure>
+
+<p>还是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Stopped / 已停止</span><br></pre></td></tr></table></figure>
+
+<p>如果已停止，先看错误信息，不要盲目重装软件。</p>
+<hr>
+<h3 id="③-双向同步使用-Send-Receive"><a href="#③-双向同步使用-Send-Receive" class="headerlink" title="③ 双向同步使用 Send &amp; Receive"></a>③ 双向同步使用 Send &amp; Receive</h3><p>两边需要双向修改时：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Folder Type = Send &amp; Receive</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="④-不要随便修改-Folder-ID"><a href="#④-不要随便修改-Folder-ID" class="headerlink" title="④ 不要随便修改 Folder ID"></a>④ 不要随便修改 Folder ID</h3><p>出现问题时优先检查：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Folder Path</span><br><span class="line">Folder Status</span><br><span class="line">Error</span><br><span class="line">Folder Type</span><br></pre></td></tr></table></figure>
+
+<p>不要首先去改 Folder ID。</p>
+<hr>
+<h3 id="⑤-重要笔记最好另做备份"><a href="#⑤-重要笔记最好另做备份" class="headerlink" title="⑤ 重要笔记最好另做备份"></a>⑤ 重要笔记最好另做备份</h3><p>同步 ≠ 备份。</p>
+<p>即使同步正常，也建议定期备份 Obsidian Vault。</p>
+<hr>
+<h1 id="7-本次验证范围"><a href="#7-本次验证范围" class="headerlink" title="7. 本次验证范围"></a>7. 本次验证范围</h1><h3 id="已实际验证"><a href="#已实际验证" class="headerlink" title="已实际验证"></a>已实际验证</h3><ul>
+<li>✅ Windows</li>
+<li>✅ iPhone &#x2F; iOS</li>
+<li>✅ Obsidian</li>
+<li>✅ Syncthing</li>
+<li>✅ Möbius Sync</li>
+<li>✅ 双向同步</li>
+</ul>
+<h3 id="尚未实际验证"><a href="#尚未实际验证" class="headerlink" title="尚未实际验证"></a>尚未实际验证</h3><ul>
+<li>⏳ macOS</li>
+<li>⏳ Linux</li>
+<li>⏳ Android</li>
+</ul>
+<p>所以这份笔记目前只作为：</p>
+<blockquote>
+<p><strong>Windows + iPhone Obsidian 同步方案</strong></p>
+</blockquote>
+<p>使用。</p>
+<p>Obsidian 官方目前也将 Syncthing 列为 Windows&#x2F;macOS&#x2F;Linux 的本地同步方案，并说明 Android 可以使用社区维护的 Syncthing-Fork；但 iOS 上的 Syncthing 属于第三方&#x2F;非官方支持方案，因此本笔记不把未实际测试的平台写成”已经验证”。</p>
+<hr>
+<h1 id="8-最简记忆版"><a href="#8-最简记忆版" class="headerlink" title="8. 最简记忆版"></a>8. 最简记忆版</h1><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Windows：</span><br><span class="line">Syncthing</span><br><span class="line"></span><br><span class="line">iPhone：</span><br><span class="line">Möbius Sync</span><br><span class="line"></span><br><span class="line">Obsidian：</span><br><span class="line">两边打开同一个同步后的 Vault</span><br><span class="line"></span><br><span class="line">Syncthing：</span><br><span class="line">Folder Type → Send &amp; Receive</span><br><span class="line"></span><br><span class="line">最容易出问题的地方：</span><br><span class="line">改 Obsidian Vault 名称</span><br><span class="line">↓</span><br><span class="line">实际文件夹名称也会改变</span><br><span class="line">↓</span><br><span class="line">Syncthing 旧 Folder Path 失效</span><br><span class="line">↓</span><br><span class="line">检查并修改 Folder Path</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="9-官方参考"><a href="#9-官方参考" class="headerlink" title="9. 官方参考"></a>9. 官方参考</h1><ul>
+<li>Obsidian Vault 管理：<a target="_blank" rel="noopener" href="https://obsidian.md/help/manage-vaults">https://obsidian.md/help/manage-vaults</a></li>
+<li>Syncthing GUI：<a target="_blank" rel="noopener" href="https://docs.syncthing.net/intro/gui">https://docs.syncthing.net/intro/gui</a></li>
+<li>Syncthing 文件夹类型：<a target="_blank" rel="noopener" href="https://docs.syncthing.net/users/foldertypes.html">https://docs.syncthing.net/users/foldertypes.html</a></li>
+<li>Möbius Sync App Store：<a target="_blank" rel="noopener" href="https://apps.apple.com/jp/app/m%C3%B6bius-sync/id1539203216">https://apps.apple.com/jp/app/m%C3%B6bius-sync/id1539203216</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/09/17/Obsidian_Windows_iPhone_Syncthing_Mobius_Sync_%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93/" data-id="cuidEI9-o-8e-Msaj9JtI9Sko" data-title="Obsidian：Windows + iPhone 双向同步" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Obsidian/" rel="tag">Obsidian</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%90%8C%E6%AD%A5/" rel="tag">同步</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag">效率工具</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/09/17/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">测试文章</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Obsidian/" rel="tag">Obsidian</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8C%E6%AD%A5/" rel="tag">同步</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%9B%98/" rel="tag">复盘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/" rel="tag">故障排查</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag">效率工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/" rel="tag">电脑硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Obsidian/" style="font-size: 10px;">Obsidian</a> <a href="/tags/%E5%90%8C%E6%AD%A5/" style="font-size: 10px;">同步</a> <a href="/tags/%E5%A4%8D%E7%9B%98/" style="font-size: 10px;">复盘</a> <a href="/tags/%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/" style="font-size: 10px;">故障排查</a> <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">效率工具</a> <a href="/tags/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/" style="font-size: 10px;">电脑硬件</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 20px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/17/Obsidian_Windows_iPhone_Syncthing_Mobius_Sync_%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93/">Obsidian：Windows + iPhone 双向同步</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/17/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/">测试文章</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/15/CPU%E9%94%81%E9%A2%91%E8%AF%8A%E6%96%AD%E6%8A%A5%E5%91%8A_20260915/">电脑卡顿诊断报告（锁频问题）— 最终版（已解决）</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/31/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/31/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">我的第一篇文章</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
