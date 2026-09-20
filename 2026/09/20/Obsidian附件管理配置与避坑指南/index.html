@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Obsidian 附件（图片）管理配置与避坑指南 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="刚用 Obsidian 时最反直觉的两个现象——图片「跑到别的笔记里」、新建文件夹后笔记「被挤到下边」——先讲清核心逻辑，再给出最稳定的附件存储与自动命名配置方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Obsidian 附件（图片）管理配置与避坑指南">
+<meta property="og:url" content="http://example.com/2026/09/20/Obsidian%E9%99%84%E4%BB%B6%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="刚用 Obsidian 时最反直觉的两个现象——图片「跑到别的笔记里」、新建文件夹后笔记「被挤到下边」——先讲清核心逻辑，再给出最稳定的附件存储与自动命名配置方案。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-09-20T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-20T05:43:33.572Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Obsidian">
+<meta property="article:tag" content="效率工具">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Obsidian附件管理配置与避坑指南" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/09/20/Obsidian%E9%99%84%E4%BB%B6%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97/" class="article-date">
+  <time class="dt-published" datetime="2026-09-20T02:00:00.000Z" itemprop="datePublished">2026-09-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Obsidian 附件（图片）管理配置与避坑指南
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Obsidian-附件（图片）管理配置与避坑指南"><a href="#Obsidian-附件（图片）管理配置与避坑指南" class="headerlink" title="Obsidian 附件（图片）管理配置与避坑指南"></a>Obsidian 附件（图片）管理配置与避坑指南</h1><p>很多刚使用 Obsidian 的人，都会遇到两个非常反直觉的现象：</p>
+<ul>
+<li>为什么在笔记 A 里插入的图片，会在笔记 B 里也出现？</li>
+<li>为什么我只创建了一个新文件夹，原来的笔记就自动跑到下面去了？</li>
+</ul>
+<p>本指南将先解开这些核心逻辑，再一步步给出最稳定的最终配置方案。</p>
+<hr>
+<h2 id="一、核心认知：Obsidian-的附件与文件夹逻辑"><a href="#一、核心认知：Obsidian-的附件与文件夹逻辑" class="headerlink" title="一、核心认知：Obsidian 的附件与文件夹逻辑"></a>一、核心认知：Obsidian 的附件与文件夹逻辑</h2><h3 id="1-为什么图片会「跑到别人的笔记里」？"><a href="#1-为什么图片会「跑到别人的笔记里」？" class="headerlink" title="1. 为什么图片会「跑到别人的笔记里」？"></a>1. 为什么图片会「跑到别人的笔记里」？</h3><p><strong>🤔 难点解释：文件同级的本质</strong></p>
+<p>我们在用 Word 时，图片是直接被「塞」进文档里的。但在 Obsidian 中，笔记（.md）和图片（.png）本质上都是独立平等的电脑文件。当你在笔记里插入图片时，Obsidian 只是把图片存到某个文件夹里，然后在笔记里写下一行指向它的链接（比如 <code>![[图片.png]]</code>）。如果另一篇笔记里也恰好写了这个链接，那这张图就会在两边同时出现。</p>
+<h3 id="2-为什么新建文件夹后，笔记会掉到下面？"><a href="#2-为什么新建文件夹后，笔记会掉到下面？" class="headerlink" title="2. 为什么新建文件夹后，笔记会掉到下面？"></a>2. 为什么新建文件夹后，笔记会掉到下面？</h3><p><strong>🤔 难点解释：文件夹优先排序规则</strong></p>
+<p>这是一个新手极其容易误解的「视觉错觉」。在 Obsidian 默认的文件列表中，文件夹永远排在文件前面（Folders first）。所以，当你在根目录新建一个文件夹时，系统立刻执行「文件夹排在最上面」的规则：原本和你笔记同级的文件夹占据了前排，你的笔记就被挤到了所有文件夹的下方。注意：它们只是被「排座位」挤到了下面，并没有被真正挪进那个新文件夹里。</p>
+<h3 id="3-我们的最终配置目标"><a href="#3-我们的最终配置目标" class="headerlink" title="3. 我们的最终配置目标"></a>3. 我们的最终配置目标</h3><p>为了防止图片乱跑、名字混乱，我们需要实现：<strong>图片放在当前笔记同级专属的「附件」文件夹中，并自动重命名为「笔记名-时间戳」</strong>。</p>
+<hr>
+<h2 id="二、保姆级具体配置流程"><a href="#二、保姆级具体配置流程" class="headerlink" title="二、保姆级具体配置流程"></a>二、保姆级具体配置流程</h2><h3 id="步骤一：修改-Obsidian-核心设置（决定「图片放哪」）"><a href="#步骤一：修改-Obsidian-核心设置（决定「图片放哪」）" class="headerlink" title="步骤一：修改 Obsidian 核心设置（决定「图片放哪」）"></a>步骤一：修改 Obsidian 核心设置（决定「图片放哪」）</h3><p>① 打开 Obsidian，点击左下角的齿轮图标进入「设置」。</p>
+<p>② 在左侧菜单选择「文件与链接」。</p>
+<p>③ 找到「始终更新内部链接」，打开它（变成紫色）。</p>
+<p>④ 找到「附件默认存放路径」，选择「当前文件所在文件夹下指定的子文件夹」。</p>
+<p>⑤ 在「子文件夹名称」中填写「附件」。</p>
+<p><strong>🤔 难点解释与决策理由</strong></p>
+<ul>
+<li><p><strong>为什么一定要开启「始终更新内部链接」？</strong> 因为后面我们要用插件自动修改图片的名字。如果不开启这个选项，图片改名后，你的笔记就找不到它了，会变成一张「裂图」。开启后，插件改名的同时，Obsidian 会自动帮你把笔记里的链接也更新，无缝衔接。</p>
+</li>
+<li><p><strong>为什么不能选「当前文件所在的文件夹」？</strong> 我们曾以为「当前文件夹」意味着图片会被装进当前的笔记内部。但实际上，它会把图片和你的 .md 笔记全部平铺在同一个目录下。想象一下你的文件夹里有 10 篇笔记和 50 张图片混在一起，左侧列表看起来就像凭空多出了 50 篇乱码笔记，找笔记会极其痛苦。必须建一个子文件夹把图片隔离存放。这里填中文「附件」就建中文文件夹，写英文 <code>attachments</code> 就建英文文件夹，名字完全由你决定。</p>
+</li>
+</ul>
+<h3 id="步骤二：安装重命名插件（无脑跟着点）"><a href="#步骤二：安装重命名插件（无脑跟着点）" class="headerlink" title="步骤二：安装重命名插件（无脑跟着点）"></a>步骤二：安装重命名插件（无脑跟着点）</h3><p>① 在左侧菜单点击「第三方插件」。</p>
+<p>② 如果提示「受限模式」，请点击「关闭受限模式」（或开启社区插件）。</p>
+<p>③ 点击「社区插件市场」旁边的「浏览」按钮。</p>
+<p>④ 在搜索框输入 <code>Paste Image Rename</code>。</p>
+<p>⑤ 找到对应插件，点击「安装」。</p>
+<p>⑥ 安装完成后，按钮会变成「启用」，点击「启用」。</p>
+<p><strong>💡 决策理由：为什么要用插件改名字？为什么选这个插件？</strong></p>
+<ul>
+<li><p><strong>为什么要改名？</strong> Obsidian 默认粘贴的图片名字叫 <code>Pasted image 202310251234.png</code>。时间一长，你根本不知道这张图属于哪篇笔记，还容易重名冲突。</p>
+</li>
+<li><p><strong>为什么选 Paste Image Rename？</strong> 我们最初尝试了 Attachment Management。但那个插件太「聪明」，它不仅管名字，还要抢着管路径，导致和 Obsidian 核心设置互相打架，出现了 <code>未命名/附件/未命名/附件</code> 这种无限套娃的灾难。而 Paste Image Rename 是一个轻量的「老实人」插件，它只负责重命名，绝不干涉存储路径，两权分立，完美避开了冲突。</p>
+</li>
+</ul>
+<h3 id="步骤三：配置-Paste-Image-Rename-插件"><a href="#步骤三：配置-Paste-Image-Rename-插件" class="headerlink" title="步骤三：配置 Paste Image Rename 插件"></a>步骤三：配置 Paste Image Rename 插件</h3><p>安装并启用后，在「第三方插件」列表中找到它，点击齿轮图标进入设置：</p>
+<p>① <code>Image name pattern</code>（图片命名格式）：修改为 <code>&#123;&#123;fileName&#125;&#125;-&#123;&#123;DATE:YYYYMMDD_HHmmss&#125;&#125;</code></p>
+<p>② <code>Auto rename</code>（自动重命名）：打开（开启后无需每次粘贴都点确认）</p>
+<p>③ <code>Handle all attachments</code>（处理所有附件）：打开（这样插入 PDF 等文件也会自动重命名）</p>
+<p>④ <code>Disable rename notice</code>（禁用重命名提示）：打开（避免弹窗打扰）</p>
+<p>⑤ 其他选项保持默认。</p>
+<p><strong>🤔 难点解释：日期格式为什么不能加 <code>/</code>？</strong></p>
+<p>在电脑系统中，<code>/</code> 是路径分隔符。如果你把日期设置为 <code>2023/10/25</code>，Obsidian 会误以为你要创建 <code>2023</code> 文件夹再建 <code>10</code> 文件夹。所以推荐使用 <code>.</code> 或 <code>-</code> 连接，并带上时分秒（<code>_HHmmss</code>），可避免同一天插入多张图片时产生重名冲突。</p>
+<h3 id="步骤四：清理残留与测试"><a href="#步骤四：清理残留与测试" class="headerlink" title="步骤四：清理残留与测试"></a>步骤四：清理残留与测试</h3><p>① 如果你之前经历过反复配置，请手动删除历史遗留的套娃文件夹（如多重嵌套的「未命名」和「附件」）。</p>
+<p>② 确保你的笔记文件在最外层。</p>
+<p>③ 新建一篇「测试.md」，随便截图一张，粘贴进去。</p>
+<p><strong>最终效果预期</strong></p>
+<ul>
+<li>图片自动保存至 <code>当前文件夹/附件/测试-20260920_103000.png</code></li>
+<li>左侧列表完全整洁</li>
+<li>笔记里插入的图片链接已是自动更新好的</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/09/20/Obsidian%E9%99%84%E4%BB%B6%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97/" data-id="cuidR5kNb27zX_Lue7LA5cD-I" data-title="Obsidian 附件（图片）管理配置与避坑指南" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Obsidian/" rel="tag">Obsidian</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag">效率工具</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2026/09/17/Obsidian_Windows_iPhone_Syncthing_Mobius_Sync_%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Obsidian：Windows + iPhone 双向同步</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/">电脑硬件</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Obsidian/" rel="tag">Obsidian</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8C%E6%AD%A5/" rel="tag">同步</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%8D%E7%9B%98/" rel="tag">复盘</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/" rel="tag">故障排查</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" rel="tag">效率工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/" rel="tag">电脑硬件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Obsidian/" style="font-size: 20px;">Obsidian</a> <a href="/tags/%E5%90%8C%E6%AD%A5/" style="font-size: 10px;">同步</a> <a href="/tags/%E5%A4%8D%E7%9B%98/" style="font-size: 10px;">复盘</a> <a href="/tags/%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/" style="font-size: 10px;">故障排查</a> <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/" style="font-size: 20px;">效率工具</a> <a href="/tags/%E7%94%B5%E8%84%91%E7%A1%AC%E4%BB%B6/" style="font-size: 10px;">电脑硬件</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 20px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/09/">September 2026</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/09/20/Obsidian%E9%99%84%E4%BB%B6%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97/">Obsidian 附件（图片）管理配置与避坑指南</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/17/Obsidian_Windows_iPhone_Syncthing_Mobius_Sync_%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93/">Obsidian：Windows + iPhone 双向同步</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/17/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/">测试文章</a>
+          </li>
+        
+          <li>
+            <a href="/2026/09/15/CPU%E9%94%81%E9%A2%91%E8%AF%8A%E6%96%AD%E6%8A%A5%E5%91%8A_20260915/">电脑卡顿诊断报告（锁频问题）— 最终版（已解决）</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/31/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
