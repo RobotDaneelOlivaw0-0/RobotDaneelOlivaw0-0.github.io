@@ -6,15 +6,15 @@
   
   <title>Obsidian 多设备同步配置手册 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Windows（Syncthing）＋iPhone&#x2F;iPad（Möbius Sync）＋安卓（Syncthing-Fork）多设备同步同一个 Obsidian Vault 的配置手册：两个核心概念、各端配置步骤、免费&#x2F;付费方案、运行检查与避坑排查顺序。">
+  <meta name="description" content="Windows（Syncthing）＋iPhone&#x2F;iPad（Möbius Sync）＋安卓（Syncthing-Fork）多设备同步同一个 Obsidian Vault 的配置手册：两个核心概念、各端配置步骤、免费&#x2F;付费方案、新设备接入顺序与避坑排查。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Obsidian 多设备同步配置手册">
 <meta property="og:url" content="http://example.com/2026/09/17/Obsidian_%E5%A4%9A%E8%AE%BE%E5%A4%87%E5%90%8C%E6%AD%A5%E9%85%8D%E7%BD%AE%E6%89%8B%E5%86%8C/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Windows（Syncthing）＋iPhone&#x2F;iPad（Möbius Sync）＋安卓（Syncthing-Fork）多设备同步同一个 Obsidian Vault 的配置手册：两个核心概念、各端配置步骤、免费&#x2F;付费方案、运行检查与避坑排查顺序。">
+<meta property="og:description" content="Windows（Syncthing）＋iPhone&#x2F;iPad（Möbius Sync）＋安卓（Syncthing-Fork）多设备同步同一个 Obsidian Vault 的配置手册：两个核心概念、各端配置步骤、免费&#x2F;付费方案、新设备接入顺序与避坑排查。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-09-17T04:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-23T00:51:49.476Z">
+<meta property="article:modified_time" content="2026-09-23T05:20:08.682Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="Obsidian">
 <meta property="article:tag" content="同步">
@@ -102,278 +102,196 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="Obsidian-多设备同步配置手册"><a href="#Obsidian-多设备同步配置手册" class="headerlink" title="Obsidian 多设备同步配置手册"></a>Obsidian 多设备同步配置手册</h1><h2 id="一、最终方案"><a href="#一、最终方案" class="headerlink" title="一、最终方案"></a>一、最终方案</h2><h3 id="同步设备"><a href="#同步设备" class="headerlink" title="同步设备"></a>同步设备</h3><table>
+        <h1 id="Obsidian-多设备同步配置手册"><a href="#Obsidian-多设备同步配置手册" class="headerlink" title="Obsidian 多设备同步配置手册"></a>Obsidian 多设备同步配置手册</h1><blockquote>
+<p>Windows、iPhone&#x2F;iPad、安卓手机&#x2F;平板<strong>双向实时同步同一个 Obsidian Vault</strong>，不订阅 Obsidian Sync。</p>
+</blockquote>
+<h2 id="一、最终方案"><a href="#一、最终方案" class="headerlink" title="一、最终方案"></a>一、最终方案</h2><table>
 <thead>
 <tr>
 <th>设备</th>
-<th>使用软件</th>
+<th>软件</th>
+<th>状态</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Windows 电脑</td>
 <td>Syncthing</td>
+<td>已实测</td>
 </tr>
 <tr>
 <td>iPhone &#x2F; iPad</td>
 <td>Möbius Sync</td>
+<td>iPhone 已实测</td>
 </tr>
 <tr>
 <td>安卓手机 &#x2F; 安卓平板</td>
 <td>Syncthing-Fork</td>
+<td>平板已实测</td>
 </tr>
 </tbody></table>
-<h3 id="同步方式"><a href="#同步方式" class="headerlink" title="同步方式"></a>同步方式</h3><p><strong>所有设备同步同一个 Obsidian Vault（仓库）。</strong></p>
-<p>这里的 <strong>Vault &#x3D; Obsidian 仓库</strong>，不是仓库里的某个文件夹。</p>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
-
-<p>整个 <code>MyVault</code> 文件夹就是一个 Obsidian Vault（仓库）。</p>
-<p>同步的也是整个 <code>MyVault</code>，包括：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MyVault</span><br><span class="line">├── 笔记.md</span><br><span class="line">├── 图片</span><br><span class="line">├── PDF</span><br><span class="line">├── 附件</span><br><span class="line">└── .obsidian</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h1 id="二、为什么采用-Syncthing-这套方案"><a href="#二、为什么采用-Syncthing-这套方案" class="headerlink" title="二、为什么采用 Syncthing 这套方案"></a>二、为什么采用 Syncthing 这套方案</h1><h3 id="【选择原因】"><a href="#【选择原因】" class="headerlink" title="【选择原因】"></a>【选择原因】</h3><p>设备包括 Windows、iPhone &#x2F; iPad、安卓手机 &#x2F; 安卓平板，同时不想长期订阅 Obsidian Sync。</p>
-<p>Syncthing 的特点是<strong>直接同步本地文件夹</strong>；iPhone &#x2F; iPad 则通过 Möbius Sync 接入，Android 使用 Syncthing-Fork。</p>
-<hr>
-<h1 id="三、配置前先记住两个概念"><a href="#三、配置前先记住两个概念" class="headerlink" title="三、配置前先记住两个概念"></a>三、配置前先记住两个概念</h1><h2 id="1-Device-ID-设备身份"><a href="#1-Device-ID-设备身份" class="headerlink" title="1. Device ID &#x3D; 设备身份"></a>1. Device ID &#x3D; 设备身份</h2><p>每台设备都有自己的 Device ID。</p>
-<p><strong>设备互联就是让两个设备互相知道对方的 Device ID。</strong></p>
-<h2 id="2-Folder-ID-同步文件夹身份"><a href="#2-Folder-ID-同步文件夹身份" class="headerlink" title="2. Folder ID &#x3D; 同步文件夹身份"></a>2. Folder ID &#x3D; 同步文件夹身份</h2><p>要同步的 Vault 会在 Syncthing 中对应一个 Folder ID。</p>
-<p><strong>同一个 Vault 在不同设备上使用同一个 Folder ID。</strong></p>
-<p>但是不同设备的实际保存路径可以不同。</p>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Windows：</span><br><span class="line">D:\Obsidian\MyVault</span><br><span class="line"></span><br><span class="line">Android：</span><br><span class="line">内部存储\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
-
-<p>路径不同没关系，<strong>Folder ID 相同即可</strong>。</p>
-<hr>
-<h1 id="四、Windows-电脑配置"><a href="#四、Windows-电脑配置" class="headerlink" title="四、Windows 电脑配置"></a>四、Windows 电脑配置</h1><h2 id="①-安装-Syncthing"><a href="#①-安装-Syncthing" class="headerlink" title="① 安装 Syncthing"></a>① 安装 Syncthing</h2><p>安装并打开 Syncthing，进入 Syncthing 网页管理界面。</p>
-<h2 id="②-找到-Obsidian-Vault-的实际位置"><a href="#②-找到-Obsidian-Vault-的实际位置" class="headerlink" title="② 找到 Obsidian Vault 的实际位置"></a>② 找到 Obsidian Vault 的实际位置</h2><p>在 Windows 文件资源管理器中找到整个 Obsidian 仓库。</p>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
-
-<p>确认里面能看到 <code>.md</code>、<code>.obsidian</code>、图片、PDF、附件等。</p>
-<h3 id="【注意】"><a href="#【注意】" class="headerlink" title="【注意】"></a>【注意】</h3><p>这里找的是<strong>整个 Vault 文件夹</strong>，不是 Vault 里面的某个文件夹。</p>
-<h2 id="③-在-Syncthing-添加-Vault"><a href="#③-在-Syncthing-添加-Vault" class="headerlink" title="③ 在 Syncthing 添加 Vault"></a>③ 在 Syncthing 添加 Vault</h2><p>点击：</p>
-<p><strong>Add Folder &#x2F; 添加文件夹</strong></p>
-<p>填写：</p>
-<p><strong>Folder Label</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MyVault</span><br></pre></td></tr></table></figure>
-
-<p><strong>Folder ID</strong></p>
-<p>保持 Syncthing 自动生成的即可。</p>
-<p><strong>Folder Path</strong></p>
-<p>选择实际 Vault 文件夹：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Obsidian\MyVault</span><br></pre></td></tr></table></figure>
-
-<p><strong>Folder Type</strong></p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Send &amp; Receive</span><br></pre></td></tr></table></figure>
-
-<p>保存。</p>
-<h3 id="【为什么选择-Send-Receive】"><a href="#【为什么选择-Send-Receive】" class="headerlink" title="【为什么选择 Send &amp; Receive】"></a>【为什么选择 Send &amp; Receive】</h3><p>因为三个设备都需要能够修改 Vault：</p>
-<p>电脑修改 → 移动端同步<br>移动端修改 → 电脑同步</p>
-<p>所以使用双向同步。</p>
-<hr>
-<h1 id="五、苹果移动端配置"><a href="#五、苹果移动端配置" class="headerlink" title="五、苹果移动端配置"></a>五、苹果移动端配置</h1><p>适用于 iPhone、iPad。</p>
-<h2 id="①-安装-Mobius-Sync"><a href="#①-安装-Mobius-Sync" class="headerlink" title="① 安装 Möbius Sync"></a>① 安装 Möbius Sync</h2><p>安装 Möbius Sync。</p>
-<h2 id="②-Windows-与苹果移动端建立设备互联"><a href="#②-Windows-与苹果移动端建立设备互联" class="headerlink" title="② Windows 与苹果移动端建立设备互联"></a>② Windows 与苹果移动端建立设备互联</h2><p>在苹果设备中找到 <strong>Device ID</strong>，复制。</p>
-<p>Windows Syncthing：</p>
-<p><strong>Add Remote Device &#x2F; 添加远程设备</strong></p>
-<p>输入苹果设备的 Device ID，保存。</p>
-<p>然后在苹果设备中添加 Windows 的 Device ID。</p>
-<h3 id="【为什么要做这一步】"><a href="#【为什么要做这一步】" class="headerlink" title="【为什么要做这一步】"></a>【为什么要做这一步】</h3><p><strong>设备互联 ≠ 文件夹共享。</strong></p>
-<p>设备互联解决：</p>
-<blockquote>
-<p>“这两个设备能不能互相通信？”</p>
-</blockquote>
-<p>之后还要指定：</p>
-<blockquote>
-<p>“允许它们同步哪个文件夹？”</p>
-</blockquote>
-<hr>
-<h1 id="六、苹果移动端的-Obsidian-Vault-怎么处理"><a href="#六、苹果移动端的-Obsidian-Vault-怎么处理" class="headerlink" title="六、苹果移动端的 Obsidian Vault 怎么处理"></a>六、苹果移动端的 Obsidian Vault 怎么处理</h1><p>有两种方案。</p>
-<h2 id="方案-A：免费使用"><a href="#方案-A：免费使用" class="headerlink" title="方案 A：免费使用"></a>方案 A：免费使用</h2><p>如果使用 Möbius Sync 免费版，主要只能同步 Möbius Sync 自己可管理的 sandbox 文件夹，并存在容量限制。</p>
-<h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h3><p>先在 iPhone &#x2F; iPad：</p>
-<p><strong>文件 App → 我的 iPhone &#x2F; 我的 iPad</strong></p>
-<p>找到 Möbius Sync 的文件夹。</p>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">我的 iPhone</span><br><span class="line">└── Möbius Sync</span><br></pre></td></tr></table></figure>
-
-<p>然后把**整个 Obsidian Vault（仓库）**放进去。</p>
-<p>例如原来：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">我的 iPhone</span><br><span class="line">└── Obsidian</span><br><span class="line">    └── MyVault</span><br></pre></td></tr></table></figure>
-
-<p>把整个 <code>MyVault</code> 移动&#x2F;复制到：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">我的 iPhone</span><br><span class="line">└── Möbius Sync</span><br><span class="line">    └── MyVault</span><br></pre></td></tr></table></figure>
-
-<p>然后：</p>
-<p><strong>打开 Obsidian → 打开已有仓库 → 选择这个 <code>MyVault</code> 文件夹。</strong></p>
-<p>这样：</p>
-<blockquote>
-<p><strong>Möbius Sync 同步的文件夹 &#x3D; Obsidian 打开的 Vault</strong></p>
-</blockquote>
-<h3 id="【重点理解】"><a href="#【重点理解】" class="headerlink" title="【重点理解】"></a>【重点理解】</h3><p>不是：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vault 里面再放一个 Möbius Sync 文件夹</span><br></pre></td></tr></table></figure>
-
-<p>而是：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Möbius Sync 可以访问的文件夹</span><br><span class="line">└── MyVault</span><br></pre></td></tr></table></figure>
-
-<p>其中 <code>MyVault</code> <strong>整个就是 Obsidian Vault（仓库）</strong>。</p>
-<h2 id="方案-B：付费使用"><a href="#方案-B：付费使用" class="headerlink" title="方案 B：付费使用"></a>方案 B：付费使用</h2><p>购买 Möbius Sync 完整功能后，可以使用：</p>
-<p><strong>Pick External Folder &#x2F; 选择外部文件夹</strong></p>
-<p>直接让 Möbius Sync 访问其他 App 的文件夹。</p>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">我的 iPhone</span><br><span class="line">└── Obsidian</span><br><span class="line">    └── MyVault</span><br></pre></td></tr></table></figure>
-
-<p>Möbius Sync 直接选择 <code>MyVault</code> 作为同步文件夹即可。</p>
-<h3 id="【怎么选】"><a href="#【怎么选】" class="headerlink" title="【怎么选】"></a>【怎么选】</h3><p>只是测试：</p>
-<blockquote>
-<p>可以先用免费方案。</p>
-</blockquote>
-<p>准备长期使用：</p>
-<blockquote>
-<p><strong>付费解锁 External Folder + 完整同步功能更方便。</strong></p>
-</blockquote>
-<hr>
-<h1 id="七、苹果移动端加入-Vault-同步"><a href="#七、苹果移动端加入-Vault-同步" class="headerlink" title="七、苹果移动端加入 Vault 同步"></a>七、苹果移动端加入 Vault 同步</h1><p>在 Möbius Sync 中：</p>
-<h2 id="①-添加同步文件夹"><a href="#①-添加同步文件夹" class="headerlink" title="① 添加同步文件夹"></a>① 添加同步文件夹</h2><p>选择：</p>
-<p><strong>Add Folder</strong></p>
-<h2 id="②-选择你的-Obsidian-Vault"><a href="#②-选择你的-Obsidian-Vault" class="headerlink" title="② 选择你的 Obsidian Vault"></a>② 选择你的 Obsidian Vault</h2><p>免费方案：</p>
-<blockquote>
-<p>选择 Möbius Sync 自己的文件夹中的 <code>MyVault</code></p>
-</blockquote>
-<p>付费方案：</p>
-<blockquote>
-<p>使用 <strong>Pick External Folder</strong>，直接选择原来的 <code>MyVault</code></p>
-</blockquote>
-<h2 id="③-设置文件夹"><a href="#③-设置文件夹" class="headerlink" title="③ 设置文件夹"></a>③ 设置文件夹</h2><p>确认：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Folder ID</span><br><span class="line">=</span><br><span class="line">Windows 上这个 Vault 的 Folder ID</span><br></pre></td></tr></table></figure>
-
-<p>Folder Type：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Send &amp; Receive</span><br></pre></td></tr></table></figure>
-
-<h2 id="④-与-Windows-共享这个-Folder"><a href="#④-与-Windows-共享这个-Folder" class="headerlink" title="④ 与 Windows 共享这个 Folder"></a>④ 与 Windows 共享这个 Folder</h2><p>确认 Windows 和苹果移动端都显示这个 Folder，等待同步。</p>
-<hr>
-<h1 id="八、安卓手机-安卓平板配置"><a href="#八、安卓手机-安卓平板配置" class="headerlink" title="八、安卓手机 &#x2F; 安卓平板配置"></a>八、安卓手机 &#x2F; 安卓平板配置</h1><h2 id="①-安装-Syncthing-Fork"><a href="#①-安装-Syncthing-Fork" class="headerlink" title="① 安装 Syncthing-Fork"></a>① 安装 Syncthing-Fork</h2><p>安装 Syncthing-Fork。</p>
-<h2 id="②-与-Windows-建立设备互联"><a href="#②-与-Windows-建立设备互联" class="headerlink" title="② 与 Windows 建立设备互联"></a>② 与 Windows 建立设备互联</h2><p>在 Android 找 <strong>Device ID</strong>，复制。</p>
-<p>Windows：</p>
-<p><strong>Add Remote Device</strong></p>
-<p>输入 Android 的 Device ID。</p>
-<p>Android 端也添加 Windows 的 Device ID。</p>
-<p>等待：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Connected</span><br></pre></td></tr></table></figure>
-
-<h2 id="③-在-Android-创建-打开-Obsidian-Vault"><a href="#③-在-Android-创建-打开-Obsidian-Vault" class="headerlink" title="③ 在 Android 创建&#x2F;打开 Obsidian Vault"></a>③ 在 Android 创建&#x2F;打开 Obsidian Vault</h2><p>打开 Obsidian。</p>
-<p>选择：</p>
-<p><strong>Device Storage &#x2F; 设备存储</strong></p>
-<p>不要选择：</p>
-<p><strong>App Storage &#x2F; 应用存储</strong></p>
-<h3 id="【为什么】"><a href="#【为什么】" class="headerlink" title="【为什么】"></a>【为什么】</h3><p>Syncthing 需要访问 Vault 文件夹，所以 Vault 应位于 Android 普通设备存储中。</p>
-<h2 id="④-Windows-共享-Vault"><a href="#④-Windows-共享-Vault" class="headerlink" title="④ Windows 共享 Vault"></a>④ Windows 共享 Vault</h2><p>Windows Syncthing：</p>
-<p><strong>MyVault → Edit → Sharing</strong></p>
-<p>勾选 Android，保存。</p>
-<h2 id="⑤-Android-接受共享"><a href="#⑤-Android-接受共享" class="headerlink" title="⑤ Android 接受共享"></a>⑤ Android 接受共享</h2><p>Android Syncthing-Fork 出现共享请求后：</p>
-<p><strong>Accept &#x2F; 接受</strong></p>
-<p>然后选择 Android 上保存 Vault 的位置。</p>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">内部存储</span><br><span class="line">└── Obsidian</span><br><span class="line">    └── MyVault</span><br></pre></td></tr></table></figure>
-
-<h2 id="⑥-检查-Folder-ID"><a href="#⑥-检查-Folder-ID" class="headerlink" title="⑥ 检查 Folder ID"></a>⑥ 检查 Folder ID</h2><p>确认：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Windows Folder ID</span><br><span class="line">=</span><br><span class="line">Android Folder ID</span><br></pre></td></tr></table></figure>
-
-<p>Folder Type：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Send &amp; Receive</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h1 id="九、三台设备最终结构"><a href="#九、三台设备最终结构" class="headerlink" title="九、三台设备最终结构"></a>九、三台设备最终结构</h1><p>你现在采用的是<strong>两两互联</strong>，不是必须通过某一台设备中转。</p>
-<p>目标是让所有需要使用的设备共同参与同一个 Vault 的同步。</p>
-<p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Windows ↔ iPhone</span><br><span class="line">Windows ↔ iPad</span><br><span class="line">Windows ↔ Android 手机</span><br><span class="line">Windows ↔ Android 平板</span><br><span class="line">iPhone ↔ iPad</span><br><span class="line">iPhone ↔ Android 手机</span><br><span class="line">iPhone ↔ Android 平板</span><br><span class="line">iPad ↔ Android 手机</span><br><span class="line">iPad ↔ Android 平板</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h1 id="十、配置完成后的检查"><a href="#十、配置完成后的检查" class="headerlink" title="十、配置完成后的检查"></a>十、配置完成后的检查</h1><p>每台设备检查：</p>
-<h3 id="设备"><a href="#设备" class="headerlink" title="设备"></a>设备</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Connected</span><br></pre></td></tr></table></figure>
-
-<h3 id="文件夹"><a href="#文件夹" class="headerlink" title="文件夹"></a>文件夹</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MyVault</span><br></pre></td></tr></table></figure>
-
-<h3 id="Folder-ID"><a href="#Folder-ID" class="headerlink" title="Folder ID"></a>Folder ID</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">所有设备一致</span><br></pre></td></tr></table></figure>
-
-<h3 id="Folder-Type"><a href="#Folder-Type" class="headerlink" title="Folder Type"></a>Folder Type</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Send &amp; Receive</span><br></pre></td></tr></table></figure>
-
-<h3 id="Folder-Path"><a href="#Folder-Path" class="headerlink" title="Folder Path"></a>Folder Path</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">每台设备指向自己的 Vault</span><br></pre></td></tr></table></figure>
-
-<h3 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Up to Date</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h1 id="十一、三方向测试"><a href="#十一、三方向测试" class="headerlink" title="十一、三方向测试"></a>十一、三方向测试</h1><p>不要直接拿重要笔记测试。</p>
-<h2 id="测试-1：Windows-→-移动端"><a href="#测试-1：Windows-→-移动端" class="headerlink" title="测试 1：Windows → 移动端"></a>测试 1：Windows → 移动端</h2><p>Windows 新建：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SyncTest-Windows.md</span><br></pre></td></tr></table></figure>
-
-<p>检查 iPhone &#x2F; iPad、Android 是否出现。</p>
-<h2 id="测试-2：苹果移动端-→-其他设备"><a href="#测试-2：苹果移动端-→-其他设备" class="headerlink" title="测试 2：苹果移动端 → 其他设备"></a>测试 2：苹果移动端 → 其他设备</h2><p>新建：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SyncTest-iOS.md</span><br></pre></td></tr></table></figure>
-
-<p>检查 Windows、Android。</p>
-<h2 id="测试-3：Android-→-其他设备"><a href="#测试-3：Android-→-其他设备" class="headerlink" title="测试 3：Android → 其他设备"></a>测试 3：Android → 其他设备</h2><p>新建：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SyncTest-Android.md</span><br></pre></td></tr></table></figure>
-
-<p>检查 Windows、苹果移动端。</p>
-<p>三个方向全部成功：</p>
-<blockquote>
-<p><strong>同步配置完成。</strong></p>
-</blockquote>
-<hr>
-<h1 id="十二、日常使用"><a href="#十二、日常使用" class="headerlink" title="十二、日常使用"></a>十二、日常使用</h1><p>正常情况下：</p>
-<p><strong>不需要手动上传 &#x2F; 下载。</strong></p>
-<p>例如电脑修改笔记：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">电脑修改</span><br><span class="line">↓</span><br><span class="line">Syncthing 检测</span><br><span class="line">↓</span><br><span class="line">自动同步到其他在线设备</span><br></pre></td></tr></table></figure>
-
-<p>设备当时没开：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">电脑修改</span><br><span class="line">↓</span><br><span class="line">Android 离线</span><br><span class="line">↓</span><br><span class="line">Android 之后上线</span><br><span class="line">↓</span><br><span class="line">自动补同步</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h1 id="十三、两个最重要的使用注意"><a href="#十三、两个最重要的使用注意" class="headerlink" title="十三、两个最重要的使用注意"></a>十三、两个最重要的使用注意</h1><h2 id="【注意-1】不要同时编辑同一个文件"><a href="#【注意-1】不要同时编辑同一个文件" class="headerlink" title="【注意 1】不要同时编辑同一个文件"></a>【注意 1】不要同时编辑同一个文件</h2><p>例如：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">电脑正在编辑 A.md</span><br><span class="line">+</span><br><span class="line">手机同时编辑 A.md</span><br></pre></td></tr></table></figure>
-
-<p>可能产生同步冲突。</p>
-<p>最好：</p>
-<blockquote>
-<p>一台设备编辑完成并同步后，再换另一台设备继续编辑。</p>
-</blockquote>
-<h2 id="【注意-2】不要随便修改-Vault-名称-文件夹名称"><a href="#【注意-2】不要随便修改-Vault-名称-文件夹名称" class="headerlink" title="【注意 2】不要随便修改 Vault 名称&#x2F;文件夹名称"></a>【注意 2】不要随便修改 Vault 名称&#x2F;文件夹名称</h2><p>例如原来：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MyVault</span><br></pre></td></tr></table></figure>
-
-<p>改成：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MyNotes</span><br></pre></td></tr></table></figure>
-
-<p>如果实际文件夹也发生变化，而 Syncthing 仍然指向：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...\MyVault</span><br></pre></td></tr></table></figure>
-
-<p>就会出现：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Folder Path missing</span><br></pre></td></tr></table></figure>
-
-<p>然后 Folder 可能变成：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Stopped</span><br></pre></td></tr></table></figure>
-
-<h3 id="如果必须改名"><a href="#如果必须改名" class="headerlink" title="如果必须改名"></a>如果必须改名</h3><p>改完以后：</p>
-<p><strong>Syncthing → 对应 Folder → Edit → Folder Path</strong></p>
-<p>把路径改成新的实际 Vault 文件夹。</p>
-<h3 id="【特别注意】"><a href="#【特别注意】" class="headerlink" title="【特别注意】"></a>【特别注意】</h3><p><strong>改 Vault 名称 ≠ 要重新创建 Folder。</strong></p>
-<p>原来的 Folder ID 不要随便改。</p>
-<hr>
-<h1 id="十四、出问题时按这个顺序查"><a href="#十四、出问题时按这个顺序查" class="headerlink" title="十四、出问题时按这个顺序查"></a>十四、出问题时按这个顺序查</h1><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">① Device 是否 Connected</span><br><span class="line">② Folder 是否 Stopped</span><br><span class="line">③ 有没有 Error</span><br><span class="line">④ Folder Path 是否真实存在</span><br><span class="line">⑤ Folder ID 是否一致</span><br><span class="line">⑥ Folder Type 是否 Send &amp; Receive</span><br><span class="line">⑦ 这个 Folder 是否共享给了对应设备</span><br></pre></td></tr></table></figure>
-
-<h3 id="最常见：Folder-Path-missing"><a href="#最常见：Folder-Path-missing" class="headerlink" title="最常见：Folder Path missing"></a>最常见：Folder Path missing</h3><p>解决：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">找到实际 Vault 文件夹</span><br><span class="line">↓</span><br><span class="line">复制实际路径</span><br><span class="line">↓</span><br><span class="line">Syncthing → Edit</span><br><span class="line">↓</span><br><span class="line">修改 Folder Path</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h1 id="十五、同步-≠-备份"><a href="#十五、同步-≠-备份" class="headerlink" title="十五、同步 ≠ 备份"></a>十五、同步 ≠ 备份</h1><p>现在多个设备都有 Vault：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">电脑</span><br><span class="line">手机</span><br><span class="line">平板</span><br></pre></td></tr></table></figure>
-
-<p>但如果误删：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">电脑删除笔记</span><br><span class="line">↓</span><br><span class="line">删除同步</span><br><span class="line">↓</span><br><span class="line">其他设备也删除</span><br></pre></td></tr></table></figure>
-
-<p>所以重要资料最好另外做备份。</p>
-<hr>
-<h1 id="重要网址"><a href="#重要网址" class="headerlink" title="重要网址"></a>重要网址</h1><ul>
+<p>同步的是<strong>整个 Vault（仓库）文件夹</strong>（含笔记、图片、PDF、附件、<code>.obsidian</code>），不是 Vault 里的某个子文件夹。</p>
+<p>实测状态：Windows + iPhone + 安卓平板 三端互通成功；iPad &#x2F; 安卓手机按本手册配置，建议先按「十一、三方向测试」验证再放重要笔记。</p>
+<h2 id="二、为什么采用-Syncthing"><a href="#二、为什么采用-Syncthing" class="headerlink" title="二、为什么采用 Syncthing"></a>二、为什么采用 Syncthing</h2><p>Windows、安卓用 Syncthing 直接同步本地文件夹，iPhone&#x2F;iPad 用 Möbius Sync 接入，避免长期订阅 Obsidian Sync。</p>
+<h2 id="三、先记住两个概念"><a href="#三、先记住两个概念" class="headerlink" title="三、先记住两个概念"></a>三、先记住两个概念</h2><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+<th>关键点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Device ID</td>
+<td>每台设备的身份</td>
+<td>互联 &#x3D; 双方互知对方的 Device ID</td>
+</tr>
+<tr>
+<td>Folder ID</td>
+<td>同步文件夹的身份</td>
+<td>同一个 Vault 在不同设备上用<strong>同一个 Folder ID</strong>；路径可以不同</td>
+</tr>
+</tbody></table>
+<p>路径不同没关系，Folder ID 一致即可，例如 <code>D:\Obsidian\MyVault</code> 和 <code>内部存储\Obsidian\MyVault</code>。</p>
+<h2 id="四、Windows-电脑配置"><a href="#四、Windows-电脑配置" class="headerlink" title="四、Windows 电脑配置"></a>四、Windows 电脑配置</h2><ol>
+<li>安装并打开 Syncthing，进入网页管理界面。</li>
+<li>在资源管理器里找到<strong>整个 Vault 文件夹</strong>（不是 Vault 内的子文件夹），确认里面有 <code>.md</code>、图片、PDF 等。</li>
+<li>点击 <strong>Add Folder &#x2F; 添加文件夹</strong>：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>填什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Folder Label</td>
+<td><code>MyVault</code></td>
+</tr>
+<tr>
+<td>Folder ID</td>
+<td>用自动生成的即可，<strong>先复制保存</strong>——这是整条同步链的钥匙，后面每台设备都要填同一个，不能各自生成</td>
+</tr>
+<tr>
+<td>Folder Path</td>
+<td>实际 Vault 文件夹，如 <code>D:\Obsidian\MyVault</code></td>
+</tr>
+<tr>
+<td>Folder Type</td>
+<td><code>Send &amp; Receive</code></td>
+</tr>
+</tbody></table>
+<p><strong>为什么 Send &amp; Receive：</strong> 所有设备都要改 Vault，双向同步（电脑↔移动端）。</p>
+<p><strong>新设备第一次接入顺序：</strong> Windows 先同步到 <code>Up to Date</code> → 新设备用「全新（空）Vault」接入、让 Windows 内容完整拉过来 → 两端都 <code>Up to Date</code> 再正常使用 → 新设备有旧内容先备份。</p>
+<h2 id="五、苹果移动端配置（iPhone-iPad）"><a href="#五、苹果移动端配置（iPhone-iPad）" class="headerlink" title="五、苹果移动端配置（iPhone &#x2F; iPad）"></a>五、苹果移动端配置（iPhone &#x2F; iPad）</h2><ol>
+<li>安装 <strong>Möbius Sync</strong>。</li>
+<li><strong>互联</strong>：苹果端复制自己的 Device ID → Windows 里 <strong>Add Remote Device</strong> 填入；再从苹果端添加 Windows 的 Device ID。</li>
+<li>注意：<strong>互联 ≠ 文件夹共享</strong>。互联解决”能不能通信”，之后还要指定”允许同步哪个文件夹”。</li>
+</ol>
+<h2 id="六、苹果端-Vault-怎么放"><a href="#六、苹果端-Vault-怎么放" class="headerlink" title="六、苹果端 Vault 怎么放"></a>六、苹果端 Vault 怎么放</h2><p><strong>方案 A（免费）</strong>：只能同步 Möbius Sync 的 sandbox 文件夹（有容量限制）。</p>
+<ol>
+<li>文件 App → 我的 iPhone&#x2F;iPad → 找到 <strong>Möbius Sync</strong> 文件夹；</li>
+<li>把<strong>整个 Vault</strong> 移动&#x2F;复制进去（<code>我的iPhone/Möbius Sync/MyVault</code>）；</li>
+<li>Obsidian → 打开已有仓库 → 选这个 <code>MyVault</code>。</li>
+</ol>
+<p>关键：<strong>Möbius Sync 同步的文件夹 &#x3D; Obsidian 打开的 Vault</strong>，不是”Vault 里再放一个 Möbius Sync 文件夹”。</p>
+<p><strong>方案 B（付费）</strong>：用 <strong>Pick External Folder</strong> 直接选择原有 Vault 文件夹即可。测试用免费版，长期用付费版更方便。</p>
+<h2 id="七、苹果端加入-Vault-同步"><a href="#七、苹果端加入-Vault-同步" class="headerlink" title="七、苹果端加入 Vault 同步"></a>七、苹果端加入 Vault 同步</h2><ol>
+<li>点击 <strong>Add Folder</strong>；</li>
+<li>免费版选 Möbius Sync 文件夹里的 <code>MyVault</code>；付费版用 Pick External Folder 直选；</li>
+<li>设置：<ul>
+<li><strong>Folder ID</strong> &#x3D; Windows 的 Folder ID（<strong>手动照抄，别自动生成</strong>）；</li>
+<li><strong>Folder Type</strong> &#x3D; <code>Send &amp; Receive</code>；</li>
+</ul>
+</li>
+<li>确认 Windows 和苹果两端都出现这个 Folder，等待同步。</li>
+</ol>
+<h2 id="八、安卓手机-平板配置"><a href="#八、安卓手机-平板配置" class="headerlink" title="八、安卓手机 &#x2F; 平板配置"></a>八、安卓手机 &#x2F; 平板配置</h2><ol>
+<li>安装 <strong>Syncthing-Fork</strong>；</li>
+<li><strong>互联</strong>：安卓复制 Device ID → Windows 添加；安卓再添加 Windows 的 Device ID，直到显示 <code>Connected</code>；</li>
+<li>打开 Obsidian，Vault 放到 <strong>Device Storage &#x2F; 设备存储</strong>（别用 App Storage），Syncthing 才能访问；</li>
+<li>Windows：<strong>MyVault → Edit → Sharing</strong> 勾选安卓并保存；</li>
+<li>安卓接受共享请求，选保存位置（如 <code>内部存储/Obsidian/MyVault</code>）；</li>
+<li>检查 <strong>Folder ID</strong> 与 Windows 一致（不一致就手动改），Folder Type 为 <code>Send &amp; Receive</code>。</li>
+</ol>
+<h2 id="九、多设备最终结构"><a href="#九、多设备最终结构" class="headerlink" title="九、多设备最终结构"></a>九、多设备最终结构</h2><p>采用<strong>两两互联</strong>，无需中转设备，例如 Windows↔iPhone、iPhone↔iPad、iPhone↔安卓平板等。目标是所有设备共同参与同一个 Vault 的同步。</p>
+<h2 id="十、配置完成后的检查"><a href="#十、配置完成后的检查" class="headerlink" title="十、配置完成后的检查"></a>十、配置完成后的检查</h2><p>每台设备确认：</p>
+<table>
+<thead>
+<tr>
+<th>检查项</th>
+<th>应为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>设备状态</td>
+<td><code>Connected</code></td>
+</tr>
+<tr>
+<td>文件夹</td>
+<td><code>MyVault</code></td>
+</tr>
+<tr>
+<td>Folder ID</td>
+<td>所有设备一致</td>
+</tr>
+<tr>
+<td>Folder Type</td>
+<td><code>Send &amp; Receive</code></td>
+</tr>
+<tr>
+<td>Folder Path</td>
+<td>指向各设备自己的 Vault</td>
+</tr>
+<tr>
+<td>同步状态</td>
+<td><code>Up to Date</code></td>
+</tr>
+</tbody></table>
+<h2 id="十一、三方向测试"><a href="#十一、三方向测试" class="headerlink" title="十一、三方向测试"></a>十一、三方向测试</h2><p>别拿重要笔记测，分别新建测试文件：</p>
+<table>
+<thead>
+<tr>
+<th>方向</th>
+<th>新建文件</th>
+<th>到哪确认</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Windows → 移动端</td>
+<td><code>SyncTest-Windows.md</code></td>
+<td>iPhone&#x2F;iPad、安卓</td>
+</tr>
+<tr>
+<td>iPhone → 其他</td>
+<td><code>SyncTest-iOS.md</code></td>
+<td>Windows、安卓</td>
+</tr>
+<tr>
+<td>安卓 → 其他</td>
+<td><code>SyncTest-Android.md</code></td>
+<td>Windows、iPhone&#x2F;iPad</td>
+</tr>
+</tbody></table>
+<p>三个方向全部成功 &#x3D; 同步配置完成。</p>
+<h2 id="十二、日常使用"><a href="#十二、日常使用" class="headerlink" title="十二、日常使用"></a>十二、日常使用</h2><p>不用手动上传&#x2F;下载，修改后自动同步；当时离线的设备下次上线会自动补同步。</p>
+<h2 id="十三、三个最重要的使用注意"><a href="#十三、三个最重要的使用注意" class="headerlink" title="十三、三个最重要的使用注意"></a>十三、三个最重要的使用注意</h2><ol>
+<li><strong>不要同时编辑同一个文件</strong>：电脑改 <code>A.md</code> 时手机别一起改，易冲突；等一台同步完再换下一台。</li>
+<li><strong>不要随便改 Vault 名称&#x2F;文件夹名称</strong>：名称变了但 Syncthing 仍指向旧路径 → <code>Folder Path missing</code> → Folder 变 <code>Stopped</code>。必须改名时，改完到 Syncthing → Edit → 更新 <strong>Folder Path</strong>；<strong>改名 ≠ 重建 Folder，Folder ID 别乱改</strong>。</li>
+<li><strong>真冲突了怎么办</strong>：冲突时会生成副本，如 <code>A - 电脑名1.sync-conflict-20260923-123456.md</code>。处理：对比两份 → 留正确较新的一份 → 改回正常文件名（如 <code>A.md</code>）→ 删掉另一份和 <code>.sync-conflict-</code> 副本。</li>
+</ol>
+<h2 id="十四、出问题按这个顺序查"><a href="#十四、出问题按这个顺序查" class="headerlink" title="十四、出问题按这个顺序查"></a>十四、出问题按这个顺序查</h2><ol>
+<li>Device 是否 <code>Connected</code></li>
+<li>Folder 是否 <code>Stopped</code></li>
+<li>有无 <code>Error</code></li>
+<li>Folder Path 是否真实存在</li>
+<li>Folder ID 是否一致</li>
+<li>Folder Type 是否 <code>Send &amp; Receive</code></li>
+<li>文件夹是否共享给了对应设备</li>
+</ol>
+<p>最常见 <strong>Folder Path missing</strong>：找到实际 Vault 文件夹 → 复制路径 → Syncthing → Edit → 修改 Folder Path。</p>
+<h2 id="十五、同步-≠-备份"><a href="#十五、同步-≠-备份" class="headerlink" title="十五、同步 ≠ 备份"></a>十五、同步 ≠ 备份</h2><p>电脑删除会同步删到其他设备（误删&#x3D;全部没有）。重要资料务必另外备份。</p>
+<h2 id="附录：重要网址"><a href="#附录：重要网址" class="headerlink" title="附录：重要网址"></a>附录：重要网址</h2><ul>
 <li>Obsidian 官方帮助：<a target="_blank" rel="noopener" href="https://help.obsidian.md/">https://help.obsidian.md/</a></li>
 <li>Syncthing 官方文档：<a target="_blank" rel="noopener" href="https://docs.syncthing.net/">https://docs.syncthing.net/</a></li>
 <li>Syncthing Getting Started：<a target="_blank" rel="noopener" href="https://docs.syncthing.net/intro/getting-started">https://docs.syncthing.net/intro/getting-started</a></li>
